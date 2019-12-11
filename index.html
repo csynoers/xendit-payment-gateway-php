@@ -188,7 +188,7 @@
                                 <h5 class="card-title">${b.name}</h5>
                                 <span class="badge badge-info">Rp. ${b.price}</span>
                                 <p class="card-text">${b.description}</p>
-                                <a href="javascript:void(0)" data-id="${a}" class="btn btn-primary add-cart">Add To Cart</a>
+                                <a href="javascript:void(0)" data-id="${b.product_id}" class="btn btn-primary add-cart">Add To Cart</a>
                             </div>
                         </div>
                     </div>
@@ -325,7 +325,8 @@
                     $('#paymentMethod').html(`
                         <iframe style="height:52vh" class="w-100" src="${d.invoice_url}" frameborder="0" scrollingX="no"/>
                     `);
-                    $('#myModal').on('hidden.bs.modal', function () {
+
+                    $('#myModal').on('hide.bs.modal', function () {
                         pageWebsiteCart();
                     }) 
                 });

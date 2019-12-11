@@ -15,12 +15,16 @@
         case 'add-carts':
             session_start();
             $data = read_file("json/products.json");
-            $data = $data[ $_GET['id'] ];
+            foreach ($data as $key => $value) {
+                if ( $value->product_id==$_GET['id'] ) {
+                    $data = $value;
+                }
+            }
             if ( empty($_SESSION[session_id()]) ) {
                 $data->qty = 1;
                 $data->subtotal = $data->price;
-
-                $_SESSION[ session_id() ][ $_GET['id'] ] = $data;
+                session_regenerate_id();
+                $_SESSION[ session_id() ][] = $data;
                 
                 $data = [
                     'status' => 1,
@@ -28,28 +32,37 @@
                 ];
 
             } else {
-                if ( empty( $_SESSION[ session_id() ][ $_GET['id'] ] ) ) {
+                $rows = $_SESSION[ session_id() ];
+                $rowsKey = NULL;
+                foreach ($rows as $key => $value) {
+                    if ( $value->product_id==$_GET['id'] ) {
+                        $rowsKey = $key;
+                    }
+                }
+
+                if ( empty( $rows[$rowsKey] ) ) {
                     $data->qty = 1;
                     $data->subtotal = $data->price;
-    
-                    $_SESSION[ session_id() ][ $_GET['id'] ] = $data;
-                    
+
+                    $_SESSION[ session_id() ][] = $data;
+
                     $data = [
                         'status' => 1,
                         'msg'    => "Cart added"
                     ];
 
                 } else {
-                    $data = $_SESSION[ session_id() ][ $_GET['id'] ];
-                    $data->qty      += 1;
-                    $data->subtotal = ($data->price * $data->qty);
+                    $data = $_SESSION[ session_id() ][ $rowsKey ];
                     if ( $data->qty > $data->stock ) {
                         $data = [
                             'status' => 0,
                             'msg'    => "Sorry, Qty is limited"
                         ];
                     } else {
-                        $_SESSION[ session_id() ][ $_GET['id'] ] = $data;
+                        $data->qty      += 1;
+                        $data->subtotal = ($data->price * $data->qty);
+
+                        $_SESSION[ session_id() ][ $rowsKey ] = $data;
                         $data = [
                             'status' => 1,
                             'msg'    => "Cart added"
