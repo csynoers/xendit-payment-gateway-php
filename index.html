@@ -206,7 +206,7 @@
             let getCartsRows = getCarts();
             if ( getCartsRows.length > 0 ) {
                 let total = 0;
-                $.each( getCarts(),function(a,b) {
+                $.each( getCartsRows,function(a,b) {
                     htmls.rows.push(`
                         <tr>
                             <th scope="row">${(a+1)}</th>
