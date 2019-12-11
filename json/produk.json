@@ -1,0 +1,32 @@
+[
+    {
+        "product_id"    : "1",
+        "name"          : "Produk Satu",
+        "description"   : "Deskripsi Produk Satu",
+        "price"         : 1000000
+    },
+    {
+        "product_id"    : "2",
+        "name"          : "Produk Dua",
+        "description"   : "Deskripsi Produk Dua",
+        "price"         : 2000000
+    },
+    {
+        "product_id"    : "3",
+        "name"          : "Produk Tiga",
+        "description"   : "Deskripsi Produk Tiga",
+        "price"         : 3000000
+    },
+    {
+        "product_id"    : "4",
+        "name"          : "Produk Empat",
+        "description"   : "Deskripsi Produk Empat",
+        "price"         : 4000000
+    },
+    {
+        "product_id"    : "5",
+        "name"          : "Produk Lima",
+        "description"   : "Deskripsi Produk Lima",
+        "price"         : 5000000
+    }
+]
