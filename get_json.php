@@ -84,23 +84,27 @@
             $amount         = $_GET['total'];
             $payer_email    = $_GET['email'];
             $description    = [];
-
             foreach ($_SESSION[ session_id() ] as $key => $value) {
                 $description[] = "{$value->name} ({$value->qty}x)";
             }
             $description = 'Pembelian: ' .implode(',',$description);
-            session_destroy();
 
             // create invoice
-            $data = $xenditPHPClient->createInvoice($external_id, $amount, $payer_email, $description);
-            $orders     = read_file("json/orders.json");
-            $orders[]   = $data;
-            overwrite_file("json/orders.json",$orders);
+            $data   = $xenditPHPClient->createInvoice($external_id, $amount, $payer_email, $description);
+            $orders = read_file("json/orders.json");
+            // $data           = $xenditPHPClient->createInvoice('5df13d3003a3cd3f45eb9317');
+            // echo '<pre>';
+            // // print_r([(object) $data]);
+            // echo json_encode(array_merge($orders,[(object) $data]));
+            // echo '</pre>';
+            // die();
+            overwrite_file("json/orders.json",array_merge($orders,[(object) $data]));
 
             $data = [
                 'status'        => 'true',
                 "invoice_url"   => $data['invoice_url'],
             ];
+            session_destroy();
             break;
 
         case 'get-invoice':
