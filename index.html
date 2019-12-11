@@ -13,6 +13,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            overflow-y: scroll;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-dark navbar-expand-lg navbar-light bg-primary">
@@ -39,6 +44,28 @@
         </div>
     </nav>
     <div class="container" id="root">Content Here</div>
+    <div class="modal" id="myModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                <h4 class="modal-title">Modal Heading</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+        
+                <!-- Modal body -->
+                <div class="modal-body">
+                Modal body..
+                </div>
+        
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+        
+            </div>
+        </div>
+    </div>
     <script>
         /* set page default */
         getPages('website');
@@ -92,12 +119,10 @@
                             </div>
                             <div class="tab-pane fade" id="cart" role="tabpanel" aria-labelledby="cart-tab">
                                 <div class="row">
-                                    <div class="col-sm-12"></div>
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="transaction" role="tabpanel" aria-labelledby="transaction-tab">
                                 <div class="row">
-                                    <div class="col-sm-12"></div>
                                 </div>
                             </div>
                         </div>
@@ -109,6 +134,8 @@
             $('#root').html(html);
 
             navTabsOnClickWebsite();
+
+            addToCart();
         }
 
         function navTabsOnClickWebsite()
@@ -117,19 +144,33 @@
                 switch ( $(this).attr('aria-controls') ) {
                     case 'home':
                         $("#myTabContentWebsite #home .row").html( pageWebsiteHome() );
+
+                        addToCart();
                         break;
                     
                     case 'cart':
                         $("#myTabContentWebsite #cart .row").html( pageWebsiteCart() );
+                        formCheckout();
                         break;
 
                     case 'transaction':
                         $("#myTabContentWebsite #transaction .row").html( pageWebsiteTransaction() );
+                        formCheckout();
                         break;
                 
                     default:
                         break;
                 }
+            })
+        }
+
+        function addToCart()
+        {
+            $('.add-cart').on('click',function(){
+                let id = $(this).data('id');
+                $.getJSON("get_json.php",{"data":"add-carts","id":id},function( d ){
+                    alert(d.msg)
+                });
             })
         }
 
@@ -147,7 +188,7 @@
                                 <h5 class="card-title">${b.name}</h5>
                                 <span class="badge badge-info">Rp. ${b.price}</span>
                                 <p class="card-text">${b.description}</p>
-                                <a href="javascript:void(0)" class="btn btn-primary">Add To Cart</a>
+                                <a href="javascript:void(0)" data-id="${a}" class="btn btn-primary add-cart">Add To Cart</a>
                             </div>
                         </div>
                     </div>
@@ -158,12 +199,193 @@
 
         function pageWebsiteCart()
         {
+            let htmls = {};
+            htmls['rows'] = [];
+            htmls['checkout'] = "";
 
+            let getCartsRows = getCarts();
+            if ( getCartsRows.length > 0 ) {
+                let total = 0;
+                $.each( getCarts(),function(a,b) {
+                    htmls.rows.push(`
+                        <tr>
+                            <th scope="row">${(a+1)}</th>
+                            <td><img width="100px" src="${b.file_name}" alt="${b.name}" class="img-thumbnail"></td>
+                            <td>${b.name}</td>
+                            <td>${b.qty}</td>
+                            <td>Rp. ${b.price}</td>
+                            <td>Rp. ${b.subtotal}</td>
+                        </tr>
+                    `);
+                    total += b.subtotal;
+                } );
+                htmls.rows.push(`
+                    <tr class="bg-light font-weight-bolder text-primary">
+                        <td colspan="5">
+                            Total
+                        </td>
+                        <td id="total" data-value="${total}">
+                            Rp. ${total}
+                        </td>
+                    </tr>
+                `);
+                htmls.checkout = `
+                    <button type="button" class="btn btn-block btn-primary checkout" data-toggle="modal" data-target="#myModal" data-checkout="cart">Checkout</button>
+                    <hr>
+                `;
+            } else {
+                htmls.rows.push(`
+                    <tr>
+                        <td colspan="6" class="text-center text-warning">
+                            Product Not Found
+                        </td>
+                    </tr>
+                `);
+            }
+            htmls['rows'] = htmls.rows.join('');
+
+            return `
+                <div class="col-sm-12">
+                    <table class="table table-bordered mt-3">
+                        <thead>
+                            <tr>
+                                <th scope="col">#No</th>
+                                <th scope="col">Thumbnail</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Qty</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Sub Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${htmls.rows}
+                        </tbody>
+                    </table>
+                    <hr>
+                    ${htmls.checkout}
+                </div>
+            `;
+        }
+
+        function formCheckout()
+        {
+            $('.checkout').on('click',function(){
+                if ( $(this).data('checkout')=='cart' ) {
+                    let modal = $('#myModal');
+                    modal.find('.modal-title').text("Checkout");
+                    modal.find('.modal-body').html(`
+                        <form id="formCheckout">
+                            <div class="form-group">
+                                <label for="email">Email address:</label>
+                                <input type="email" name="email" class="form-control" placeholder="Enter email" id="email" required="">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                        <div id="paymentMethod"></div>
+                    `);
+
+                    formCheckoutSubmit();
+                    
+                } else {
+                    let data = {
+                        "data"  : "get-invoice",
+                        "id"    : $(this).data('id'),
+                    };
+                    
+                    let modal = $('#myModal');
+                    modal.find('.modal-body').html('<img src="https://i.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.webp" class="w-100">');
+                    $.getJSON('get_json.php',data,function( d ){
+                        $("#formCheckout").remove();
+                        modal.find('.modal-title').text("Payment Method");
+
+                        modal.find('.modal-body').html(`
+                            <iframe style="height:52vh" class="w-100" src="${d.invoice_url}" frameborder="0" scrollingX="no"/>
+                        `);
+                    });
+                }
+            });
+        }
+
+        function formCheckoutSubmit()
+        {
+            $('#formCheckout').on('submit',function(e){
+                e.preventDefault();
+                let data = {
+                    "data"  : "create-invoice",
+                    "email" : $('#formCheckout').find('#email').val(),
+                    "total" : $('#total').data('value')
+                };
+                $("#formCheckout").remove();
+                $('#paymentMethod').html('<img src="https://i.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.webp" class="w-100">');
+                $.getJSON('get_json.php',data,function( d ){
+                    let modal = $('#myModal');
+                    modal.find('.modal-title').text("Payment Method");
+
+                    $('#paymentMethod').html(`
+                        <iframe style="height:52vh" class="w-100" src="${d.invoice_url}" frameborder="0" scrollingX="no"/>
+                    `);
+                    $('#myModal').on('hidden.bs.modal', function () {
+                        pageWebsiteCart();
+                    }) 
+                });
+            })
         }
 
         function pageWebsiteTransaction()
         {
+            let htmls = {};
+            htmls['rows'] = [];
+            htmls['checkout'] = "";
 
+            let getOrdersRows = getOrders();
+            console.log(getOrdersRows);
+            if ( getOrdersRows.length > 0 ) {
+                $.each( getOrdersRows,function(a,b) {
+                    htmls.rows.push(`
+                        <tr>
+                            <th scope="row">${(a+1)}</th>
+                            <td>${b.created}</td>
+                            <td>${b.id}</td>
+                            <td>${b.payer_email}</td>
+                            <td><button type="button" class="btn btn-block btn-primary checkout" data-toggle="modal" data-target="#myModal" data-checkout="transaction" data-id="${b.id}">Pay Now</button></td>
+                            <td>${b.status}</td>
+                            <td>Rp. ${b.amount}</td>
+                        </tr>
+                    `);
+                } );
+            } else {
+                htmls.rows.push(`
+                    <tr>
+                        <td colspan="7" class="text-center text-warning">
+                            Product Not Found
+                        </td>
+                    </tr>
+                `);
+            }
+            htmls['rows'] = htmls.rows.join('');
+
+            return `
+                <div class="col-sm-12">
+                    <table class="table table-bordered mt-3">
+                        <thead>
+                            <tr>
+                                <th scope="col">#No</th>
+                                <th scope="col">Dates</th>
+                                <th scope="col">Orders ID</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Payments</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${htmls.rows}
+                        </tbody>
+                    </table>
+                    <hr>
+                    ${htmls.checkout}
+                </div>
+            `;
         }
 
         function pageAdmin()
@@ -276,6 +498,29 @@
                 
             }
         }
+        
+        function getCarts( d )
+        {
+            if ( d ) {
+                return JSON.parse( $.ajax({type: "GET", url: "get_json.php", async: false, data: {"c":"products","id":d} }).responseText );
+
+            } else {
+                return JSON.parse( $.ajax({type: "GET", url: "get_json.php", async: false, data: {"data":"carts"} }).responseText );
+                
+            }
+        }
+        
+        function getOrders( d )
+        {
+            if ( d ) {
+                return JSON.parse( $.ajax({type: "GET", url: "get_json.php", async: false, data: {"c":"products","id":d} }).responseText );
+
+            } else {
+                return JSON.parse( $.ajax({type: "GET", url: "get_json.php", async: false, data: {"data":"orders"} }).responseText );
+                
+            }
+        }
+
     </script>
 </body>
 </html>
