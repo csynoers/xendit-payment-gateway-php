@@ -204,6 +204,7 @@
             htmls['checkout'] = "";
 
             let getCartsRows = getCarts();
+            console.log(getCartsRows);
             if ( getCartsRows.length > 0 ) {
                 let total = 0;
                 $.each( getCartsRows,function(a,b) {
@@ -338,7 +339,6 @@
             htmls['checkout'] = "";
 
             let getOrdersRows = getOrders();
-            console.log(getOrdersRows);
             if ( getOrdersRows.length > 0 ) {
                 $.each( getOrdersRows,function(a,b) {
                     htmls.rows.push(`
