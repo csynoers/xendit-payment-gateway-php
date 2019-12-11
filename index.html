@@ -30,23 +30,6 @@
                 <li class="nav-item" data-target="admin">
                     <a class="nav-link" href="javascript:void(0)">Admin <span class="sr-only">(current)</span></a>
                 </li>
-                <!-- <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Dropdown
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                </div>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-                </li> -->
             </ul>
             <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
@@ -55,9 +38,7 @@
             </div>
         </div>
     </nav>
-    <div class="row">
-        <div class="container" id="root">Content Here</div>
-    </div>
+    <div class="container" id="root">Content Here</div>
     <script>
         /* set page default */
         getPages('website');
@@ -89,6 +70,71 @@
 
         function pageWebsite()
         {
+            let html = `
+                <div class="row mt-3">
+                    <div class="col-sm-12">
+                        <ul class="nav nav-tabs" id="myTabWebsite" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="cart-tab" data-toggle="tab" href="#cart" role="tab" aria-controls="cart" aria-selected="false">Cart</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="transaction-tab" data-toggle="tab" href="#transaction" role="tab" aria-controls="transaction" aria-selected="false">Transaction</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContentWebsite">
+                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                <div class="row pt-3">
+                                    ${pageWebsiteHome()}
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="cart" role="tabpanel" aria-labelledby="cart-tab">
+                                <div class="row">
+                                    <div class="col-sm-12"></div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="transaction" role="tabpanel" aria-labelledby="transaction-tab">
+                                <div class="row">
+                                    <div class="col-sm-12"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            /* set root content */
+            $('#root').html(html);
+
+            navTabsOnClickWebsite();
+        }
+
+        function navTabsOnClickWebsite()
+        {
+            $('#myTabWebsite .nav-link').on('click',function(){
+                switch ( $(this).attr('aria-controls') ) {
+                    case 'home':
+                        $("#myTabContentWebsite #home .row").html( pageWebsiteHome() );
+                        break;
+                    
+                    case 'cart':
+                        $("#myTabContentWebsite #cart .row").html( pageWebsiteCart() );
+                        break;
+
+                    case 'transaction':
+                        $("#myTabContentWebsite #transaction .row").html( pageWebsiteTransaction() );
+                        break;
+                
+                    default:
+                        break;
+                }
+            })
+        }
+
+        function pageWebsiteHome()
+        {
             let htmls       = {};
             htmls['rows']   = []; 
 
@@ -107,16 +153,17 @@
                     </div>
                 `);
             })
-            htmls['rows'] = htmls.rows.join('');
+            return htmls['rows'] = htmls.rows.join('');
+        }
 
-            htmls['rows'] = `
-                <div class="row mt-3">
-                    ${htmls.rows}
-                </div>
-            `;
+        function pageWebsiteCart()
+        {
 
-            /* set root content */
-            $('#root').html(htmls.rows);
+        }
+
+        function pageWebsiteTransaction()
+        {
+
         }
 
         function pageAdmin()
@@ -126,26 +173,96 @@
             html = `
             <div class="card mt-3">
                 <div class="card-body">
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <ul class="nav nav-tabs" id="myTabAdmin" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+                            <a class="nav-link" id="product-tab" data-toggle="tab" href="#product" role="tab" aria-controls="product" aria-selected="false">Product</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+                            <a class="nav-link" id="orders-tab" data-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false">Orders</a>
                         </li>
                     </ul>
-                    <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
-                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                    <div class="tab-content" id="myTabContentAdmin">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            ${pageAdminHome()}
+                        </div>
+                        <div class="tab-pane fade" id="product" role="tabpanel" aria-labelledby="product-tab">...</div>
+                        <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">...</div>
                     </div>
                 </div>
             </div>
             `;
             $('#root').html(html);
+
+            navTabsOnClickAdmin();
+        }
+
+        function navTabsOnClickAdmin()
+        {
+            $('#myTabAdmin .nav-link').on('click',function(){
+                switch ( $(this).attr('aria-controls') ) {
+                    case 'home':
+                        $("#myTabContentAdmin #home").html( pageAdminHome() );
+                        break;
+                    
+                    case 'product':
+                        $("#myTabContentAdmin #product").html( pageAdminProducts() );
+                        break;
+
+                    case 'transaction':
+                        $("#myTabWebsite #transaction .row").html( pageWebsiteTransaction() );
+                        break;
+                
+                    default:
+                        break;
+                }
+            })
+        }
+
+        function pageAdminHome() {
+            return `
+                <div class="bg-info mt-3 p-5 text-center text-white">HALAMAN ADMIN</div>
+            `;
+        }
+
+        function pageAdminProducts()
+        {
+            let htmls = {};
+            htmls['rows'] = [];
+
+            $.each( getProducts(),function(a,b) {
+                htmls.rows.push(`
+                <tr>
+                    <th scope="row">${(a+1)}</th>
+                    <th><img width="100px" src="${b.file_name}" alt="${b.name}" class="img-thumbnail"></th>
+                    <td>${b.name}</td>
+                    <td>${b.description}</td>
+                    <td>${b.price}</td>
+                    <td>${b.stock}</td>
+                </tr>
+                `);
+            } );
+            htmls['rows'] = htmls.rows.join('');
+
+            return `
+                <table class="table table-bordered mt-3">
+                    <thead>
+                        <tr>
+                        <th scope="col">#No</th>
+                        <th scope="col">Thumbnail</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${htmls.rows}
+                    </tbody>
+                </table>
+            `;
         }
 
         /* get data async */
