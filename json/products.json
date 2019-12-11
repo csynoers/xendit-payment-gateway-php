@@ -1,0 +1,66 @@
+[
+    {
+        "product_id"    : "1",
+        "name"          : "Produk Satu",
+        "description"   : "Deskripsi Produk Satu",
+        "file_name"   : "https://via.placeholder.com/1024x768.png?text=Produk Satu",
+        "price"         : 1000000,
+        "stock"         : 10
+    },
+    {
+        "product_id"    : "2",
+        "name"          : "Produk Dua",
+        "description"   : "Deskripsi Produk Dua",
+        "file_name"   : "https://via.placeholder.com/1024x768.png?text=Produk Dua",
+        "price"         : 2000000,
+        "stock"         : 20
+    },
+    {
+        "product_id"    : "3",
+        "name"          : "Produk Tiga",
+        "description"   : "Deskripsi Produk Tiga",
+        "file_name"   : "https://via.placeholder.com/1024x768.png?text=Produk Tiga",
+        "price"         : 3000000,
+        "stock"         : 30
+    },
+    {
+        "product_id"    : "4",
+        "name"          : "Produk Empat",
+        "description"   : "Deskripsi Produk Empat",
+        "file_name"   : "https://via.placeholder.com/1024x768.png?text=Produk Empat",
+        "price"         : 4000000,
+        "stock"         : 40
+    },
+    {
+        "product_id"    : "5",
+        "name"          : "Produk Lima",
+        "description"   : "Deskripsi Produk Lima",
+        "file_name"   : "https://via.placeholder.com/1024x768.png?text=Produk Lima",
+        "price"         : 5000000,
+        "stock"         : 50
+    },
+    {
+        "product_id"    : "6",
+        "name"          : "Produk Enam",
+        "description"   : "Deskripsi Produk Enam",
+        "file_name"   : "https://via.placeholder.com/1024x768.png?text=Produk Enam",
+        "price"         : 6000000,
+        "stock"         : 60
+    },
+    {
+        "product_id"    : "7",
+        "name"          : "Produk Tujuh",
+        "description"   : "Deskripsi Produk Tujuh",
+        "file_name"   : "https://via.placeholder.com/1024x768.png?text=Produk Tujuh",
+        "price"         : 7000000,
+        "stock"         : 70
+    },
+    {
+        "product_id"    : "8",
+        "name"          : "Produk Delapan",
+        "description"   : "Deskripsi Produk Delapan",
+        "file_name"   : "https://via.placeholder.com/1024x768.png?text=Produk Delapan",
+        "price"         : 8000000,
+        "stock"         : 80
+    }
+]
