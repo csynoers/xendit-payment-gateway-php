@@ -1,3 +1,3 @@
 <?php
-    define('SECRET_API_KEY', 'xnd_development_P4qDfOss0OCpl8RtKrROHjaQYNCk9dN5lSfk+R1l9Wbe+rSiCwZ3jw==');
+    define('SECRET_API_KEY', 'xnd_production_rC79PLGbjEqvAdZqKFhKeH858o9dSwzIW5f3YhSl74BbvY4XQA7p2YabHULyfQ');
 ?>
